@@ -38,13 +38,14 @@
             grid-template-columns: repeat(3, 1fr);
             grid-gap: 10px;
             width: 100%;
-            max-width: 360px;
+            max-width: 400px;
             background-color: #222;
             padding: 15px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             margin-top: 20px;
             transform-style: preserve-3d;
+            transition: transform 0.3s ease;
         }
 
         .cell {
@@ -62,13 +63,6 @@
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transform: perspective(600px) rotateX(0deg) rotateY(0deg);
-        }
-
-        .cell:hover {
-            background-color: #444;
-            transform: scale(1.1) rotateY(15deg);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
         }
 
         .cell.taken {
@@ -112,10 +106,18 @@
             #board {
                 grid-template-columns: repeat(3, 1fr);
                 grid-gap: 8px;
+                width: 100%;
+                max-width: 95%;
             }
 
             .cell {
                 font-size: 2.5rem;
+                padding-bottom: 100%;
+            }
+
+            .reset-btn, .start-btn, .reset-progress-btn {
+                font-size: 16px;
+                padding: 12px 24px;
             }
         }
 
@@ -147,7 +149,6 @@
             border-radius: 50%;
             position: absolute;
             animation: confettiFall 3s linear infinite;
-            background-color: rgb(255, 0, 0);
         }
 
         @keyframes confettiFall {
@@ -191,7 +192,6 @@
             50% { transform: rotate(-360deg); }
             100% { transform: rotate(0deg); }
         }
-
     </style>
 </head>
 <body>
@@ -199,7 +199,7 @@
 
     <button class="start-btn" onclick="startGame()">Start Game</button>
 
-    <div id="board">
+    <div id="board" style="display: none;">
         <div class="cell" onclick="makeMove(0)"></div>
         <div class="cell" onclick="makeMove(1)"></div>
         <div class="cell" onclick="makeMove(2)"></div>
@@ -304,20 +304,21 @@
             gameOver = false;
             currentPlayer = 'x';
             document.getElementById('status').textContent = 'Trenutni igrač: ❌ | ❌ Pobednik: ' + xWins + ' | ⭕ Pobednik: ' + oWins;
-            document.querySelectorAll('.cell').forEach(cell => {
+
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
                 cell.textContent = '';
                 cell.classList.remove('taken', 'x', 'o', 'win');
             });
-            document.getElementById('confetti-container').innerHTML = '';
         }
 
-        // Reset progress (pobednici)
+        // Reset progress (wins)
         function resetProgress() {
             xWins = 0;
             oWins = 0;
             localStorage.setItem('xWins', xWins);
             localStorage.setItem('oWins', oWins);
-            document.getElementById('status').textContent = 'Trenutni igrač: ❌ | ❌ Pobednik: ' + xWins + ' | ⭕ Pobednik: ' + oWins;
+            document.getElementById('status').textContent = 'Trenutni igrač: ❌ | ❌ Pobednik: 0 | ⭕ Pobednik: 0';
         }
     </script>
 </body>
