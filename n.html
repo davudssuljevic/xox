@@ -1,3 +1,5 @@
+Evo cijelog izmijenjenog koda s promjenama koje omogućuju da konfeti traju samo 2 sekunde i nestanu, kao i da board bude ispred konfeta:
+
 <!DOCTYPE html>
 <html lang="bs">
 <head>
@@ -46,6 +48,7 @@
             margin-top: 20px;
             transform-style: preserve-3d;
             transition: transform 0.3s ease;
+            z-index: 10; /* Board is in front of confetti */
         }
 
         .cell {
@@ -148,7 +151,7 @@
             height: 10px;
             border-radius: 50%;
             position: absolute;
-            animation: confettiFall 3s linear infinite;
+            animation: confettiFall 2s linear infinite; /* Set duration to 2 seconds */
         }
 
         @keyframes confettiFall {
@@ -169,6 +172,7 @@
             100% {
                 transform: translateY(0) rotate(720deg);
                 background-color: rgb(255, 0, 255);
+                opacity: 0; /* Make confetti disappear after animation ends */
             }
         }
 
@@ -270,6 +274,11 @@
                 confetti.style.animationDelay = `${Math.random() * 2}s`;
                 confettiContainer.appendChild(confetti);
             }
+
+            // Remove confetti after 2 seconds (matching the animation duration)
+            setTimeout(() => {
+                confettiContainer.innerHTML = ''; // Clear all confetti after 2 seconds
+            }, 2000); // 2000ms = 2 seconds
         }
 
         // Check for a winner
@@ -296,30 +305,4 @@
             }
 
             return false;
-        }
 
-        // Reset game
-        function resetGame() {
-            board = ['', '', '', '', '', '', '', '', ''];
-            gameOver = false;
-            currentPlayer = 'x';
-            document.getElementById('status').textContent = 'Trenutni igrač: ❌ | ❌ Pobednik: ' + xWins + ' | ⭕ Pobednik: ' + oWins;
-
-            const cells = document.querySelectorAll('.cell');
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.classList.remove('taken', 'x', 'o', 'win');
-            });
-        }
-
-        // Reset progress (wins)
-        function resetProgress() {
-            xWins = 0;
-            oWins = 0;
-            localStorage.setItem('xWins', xWins);
-            localStorage.setItem('oWins', oWins);
-            document.getElementById('status').textContent = 'Trenutni igrač: ❌ | ❌ Pobednik: 0 | ⭕ Pobednik: 0';
-        }
-    </script>
-</body>
-</html>
